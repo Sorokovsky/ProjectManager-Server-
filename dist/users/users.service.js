@@ -25,10 +25,26 @@ let UsersService = class UsersService {
         return await this.userModel.find();
     }
     async getOne(id) {
-        return `User ${id}`;
+        try {
+            const user = await this.userModel.findById(id);
+            return user;
+        }
+        catch (e) {
+            throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
+        }
     }
-    async create() {
-        return `Created user`;
+    async create(createUserDto) {
+        const candidate = await this.userModel.findOne({ email: createUserDto.email });
+        if (candidate) {
+            throw new common_1.HttpException("Email have to be a unique", common_1.HttpStatus.BAD_REQUEST);
+        }
+        try {
+            const user = await this.userModel.create(createUserDto);
+            return user;
+        }
+        catch (e) {
+            throw new common_1.HttpException("Data Base error", common_1.HttpStatus.UNAUTHORIZED);
+        }
     }
     async delete(id) {
         return `Deleted user ${id}`;
