@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { User, UserDocument } from "src/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>){}
@@ -37,7 +38,7 @@ export class UsersService {
             throw new HttpException("Client not found", HttpStatus.BAD_REQUEST);
         }
     }
-    async update(id:mongoose.Schema.Types.ObjectId, updateUserDto:CreateUserDto):Promise<User>{
+    async update(id:mongoose.Schema.Types.ObjectId, updateUserDto:UpdateUserDto):Promise<User>{
         try{
             return await this.userModel.findByIdAndUpdate(id, updateUserDto, {new:true});
         }catch (e) {
