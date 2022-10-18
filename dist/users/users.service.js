@@ -27,6 +27,8 @@ let UsersService = class UsersService {
     async getOne(id) {
         try {
             const user = await this.userModel.findById(id);
+            if (!user)
+                throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
             return user;
         }
         catch (e) {
@@ -39,15 +41,27 @@ let UsersService = class UsersService {
             throw new common_1.HttpException("Email have to be a unique", common_1.HttpStatus.BAD_REQUEST);
         }
         try {
-            const user = await this.userModel.create(createUserDto);
-            return user;
+            return await this.userModel.create(createUserDto);
         }
         catch (e) {
             throw new common_1.HttpException("Data Base error", common_1.HttpStatus.UNAUTHORIZED);
         }
     }
     async delete(id) {
-        return `Deleted user ${id}`;
+        try {
+            return await this.userModel.findByIdAndDelete(id);
+        }
+        catch (e) {
+            throw new common_1.HttpException("Client not found", common_1.HttpStatus.BAD_REQUEST);
+        }
+    }
+    async update(id, updateUserDto) {
+        try {
+            return await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+        }
+        catch (e) {
+            throw new common_1.HttpException("Email have to be a unique", common_1.HttpStatus.BAD_REQUEST);
+        }
     }
 };
 UsersService = __decorate([

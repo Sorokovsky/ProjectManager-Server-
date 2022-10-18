@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose = require("mongoose");
 const users_service_1 = require("./users.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
+const update_user_dto_1 = require("./dto/update-user.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
@@ -32,6 +33,9 @@ let UsersController = class UsersController {
     }
     delete(id) {
         return this.usersService.delete(id);
+    }
+    update(id, updateUserDto) {
+        return this.usersService.update(id, updateUserDto);
     }
 };
 __decorate([
@@ -58,9 +62,17 @@ __decorate([
     (0, common_1.Delete)('/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [mongoose.Schema.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Put)('/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [mongoose.Schema.Types.ObjectId, update_user_dto_1.UpdateUserDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "update", null);
 UsersController = __decorate([
     (0, common_1.Controller)("/users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])

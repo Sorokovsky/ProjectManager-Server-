@@ -30,5 +30,6 @@ export declare class User {
     password: string;
     email: string;
     avatar: string;
+    _id: import("mongoose").Schema.Types.ObjectId;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, any>, {}, {}, {}, {}, "type", User>;

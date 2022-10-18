@@ -1,9 +1,8 @@
-import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import {User, UserDocument} from "src/schemas/user.schema";
-import mongoose from "mongoose";
-import {CreateUserDto} from "./dto/create-user.dto";
+import mongoose, { Model } from "mongoose";
+import { User, UserDocument } from "src/schemas/user.schema";
+import { CreateUserDto } from "./dto/create-user.dto";
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>){}
@@ -13,6 +12,7 @@ export class UsersService {
     async getOne(id:mongoose.Schema.Types.ObjectId):Promise<User> {
         try {
             const user:User = await this.userModel.findById(id);
+            if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
             return user;
         }
         catch (e) {
@@ -25,13 +25,23 @@ export class UsersService {
             throw new HttpException("Email have to be a unique", HttpStatus.BAD_REQUEST);
         }
         try {
-            const user:User = await this.userModel.create(createUserDto);
-            return user;
+            return await this.userModel.create(createUserDto);
         }catch (e) {
             throw new HttpException("Data Base error", HttpStatus.UNAUTHORIZED);
         }
     }
-    async delete(id:string):Promise<string>{
-        return `Deleted user ${id}`;
+    async delete(id:mongoose.Schema.Types.ObjectId):Promise<User>{
+        try {
+            return await this.userModel.findByIdAndDelete(id);
+        }catch (e){
+            throw new HttpException("Client not found", HttpStatus.BAD_REQUEST);
+        }
+    }
+    async update(id:mongoose.Schema.Types.ObjectId, updateUserDto:CreateUserDto):Promise<User>{
+        try{
+            return await this.userModel.findByIdAndUpdate(id, updateUserDto, {new:true});
+        }catch (e) {
+            throw new HttpException("Email have to be a unique", HttpStatus.BAD_REQUEST);
+        }
     }
 }

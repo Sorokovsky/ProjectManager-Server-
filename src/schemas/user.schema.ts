@@ -13,5 +13,6 @@ export class User {
   email: string;
   @Prop({unique: false, isRequired: false})
   avatar: string;
+  _id: import("mongoose").Schema.Types.ObjectId;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

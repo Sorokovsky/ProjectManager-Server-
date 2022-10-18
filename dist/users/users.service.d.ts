@@ -1,6 +1,5 @@
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { User, UserDocument } from "src/schemas/user.schema";
-import mongoose from "mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
 export declare class UsersService {
     private userModel;
@@ -8,5 +7,6 @@ export declare class UsersService {
     getAll(): Promise<User[]>;
     getOne(id: mongoose.Schema.Types.ObjectId): Promise<User>;
     create(createUserDto: CreateUserDto): Promise<User>;
-    delete(id: string): Promise<string>;
+    delete(id: mongoose.Schema.Types.ObjectId): Promise<User>;
+    update(id: mongoose.Schema.Types.ObjectId, updateUserDto: CreateUserDto): Promise<User>;
 }
