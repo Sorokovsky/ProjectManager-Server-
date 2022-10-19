@@ -17,16 +17,18 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("../schemas/user.schema");
+const link_schema_1 = require("../schemas/link.schema");
 let UsersService = class UsersService {
-    constructor(userModel) {
+    constructor(userModel, linkModel) {
         this.userModel = userModel;
+        this.linkModel = linkModel;
     }
     async getAll() {
         return await this.userModel.find();
     }
     async getOne(email) {
         try {
-            const user = await this.userModel.findOne({ email: email });
+            const user = await this.userModel.findOne({ email: email }).populate('links');
             if (!user)
                 throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
             return user;
@@ -34,6 +36,12 @@ let UsersService = class UsersService {
         catch (e) {
             throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
         }
+    }
+    async getOneById(id) {
+        const user = await this.userModel.findById(id).populate('links');
+        if (!user)
+            throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
+        return user;
     }
     async create(createUserDto) {
         const candidate = await this.userModel.findOne({ email: createUserDto.email });
@@ -67,7 +75,8 @@ let UsersService = class UsersService {
 UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectModel)(link_schema_1.Link.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model, mongoose_2.Model])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

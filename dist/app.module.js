@@ -10,12 +10,18 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const users_module_1 = require("./users/users.module");
+const links_module_1 = require("./links/links.module");
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [users_module_1.UsersModule, mongoose_1.MongooseModule.forRoot('mongodb+srv://Sorokovsky:sorokovsky17@cluster0.v1qg36l.mongodb.net/?retryWrites=true&w=majority')]
+        imports: [users_module_1.UsersModule,
+            links_module_1.LinksModule,
+            mongoose_1.MongooseModule.forRoot(process.env.DATA_BASE_LINK)]
     })
 ], AppModule);
 exports.AppModule = AppModule;
+;
 //# sourceMappingURL=app.module.js.map

@@ -9,38 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserSchema = exports.User = void 0;
+exports.LinkSchema = exports.Link = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-let User = class User {
+const user_schema_1 = require("./user.schema");
+let Link = class Link {
 };
 __decorate([
     (0, mongoose_1.Prop)({ unique: false, isRequired: true }),
     __metadata("design:type", String)
-], User.prototype, "surname", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ unique: false, isRequired: true }),
-    __metadata("design:type", String)
-], User.prototype, "name", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ unique: false, isRequired: true }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ unique: true, isRequired: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
+], Link.prototype, "name", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ unique: false, isRequired: false }),
     __metadata("design:type", String)
-], User.prototype, "avatar", void 0);
+], Link.prototype, "description", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.default.Schema.Types.ObjectId, strictPopulate: false, ref: 'Link' }] }),
-    __metadata("design:type", Array)
-], User.prototype, "links", void 0);
-User = __decorate([
+    (0, mongoose_1.Prop)({ unique: false, isRequired: false }),
+    __metadata("design:type", String)
+], Link.prototype, "preview", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ unique: false, isRequired: true }),
+    __metadata("design:type", String)
+], Link.prototype, "href", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: { type: mongoose_2.default.Schema.Types.ObjectId, ref: 'User' } }),
+    __metadata("design:type", user_schema_1.User)
+], Link.prototype, "user", void 0);
+Link = __decorate([
     (0, mongoose_1.Schema)()
-], User);
-exports.User = User;
-exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
-//# sourceMappingURL=user.schema.js.map
+], Link);
+exports.Link = Link;
+exports.LinkSchema = mongoose_1.SchemaFactory.createForClass(Link);
+//# sourceMappingURL=link.schema.js.map

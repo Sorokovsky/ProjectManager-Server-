@@ -4,21 +4,27 @@ import mongoose, { Model } from "mongoose";
 import { User, UserDocument } from "src/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { Link } from "../schemas/link.schema";
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>){}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, @InjectModel(Link.name) private linkModel: Model<UserDocument>){}
     async getAll():Promise<User[]>{
         return await this.userModel.find();
     }
     async getOne(email:string):Promise<User> {
         try {
-            const user:User = await this.userModel.findOne({email:email});
+            const user:User = await this.userModel.findOne({email:email}).populate('links');
             if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
             return user;
         }
         catch (e) {
             throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
         }
+    }
+    async getOneById(id:mongoose.Schema.Types.ObjectId):Promise<User> {
+        const user:User|null = await this.userModel.findById(id).populate('links');
+        if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
+        return user;
     }
     async create(createUserDto:CreateUserDto):Promise<User>{
         const candidate:User|null = await this.userModel.findOne({email:createUserDto.email});

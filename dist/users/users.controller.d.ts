@@ -8,6 +8,7 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     getAll(): Promise<User[]>;
     getOne(email: string): Promise<User>;
+    getOneById(id: mongoose.Schema.Types.ObjectId): Promise<User>;
     create(createUserDto: CreateUserDto): Promise<User>;
     delete(id: mongoose.Schema.Types.ObjectId): Promise<User>;
     update(id: mongoose.Schema.Types.ObjectId, updateUserDto: UpdateUserDto): Promise<User>;

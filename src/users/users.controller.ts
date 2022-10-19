@@ -11,9 +11,13 @@ export class UsersController{
     getAll():Promise<User[]>{
         return this.usersService.getAll();
     }
-    @Get('/:email')
+    @Get('/email/:email')
     getOne(@Param("email") email:string):Promise<User>{
         return this.usersService.getOne(email);
+    }
+    @Get('/id/:id')
+    getOneById(@Param("id") id:mongoose.Schema.Types.ObjectId):Promise<User>{
+        return this.usersService.getOneById(id);
     }
     @Post()
     create(@Body() createUserDto:CreateUserDto):Promise<User>{

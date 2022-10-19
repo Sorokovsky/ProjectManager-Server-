@@ -28,6 +28,9 @@ let UsersController = class UsersController {
     getOne(email) {
         return this.usersService.getOne(email);
     }
+    getOneById(id) {
+        return this.usersService.getOneById(id);
+    }
     create(createUserDto) {
         return this.usersService.create(createUserDto);
     }
@@ -45,12 +48,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAll", null);
 __decorate([
-    (0, common_1.Get)('/:email'),
+    (0, common_1.Get)('/email/:email'),
     __param(0, (0, common_1.Param)("email")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getOne", null);
+__decorate([
+    (0, common_1.Get)('/id/:id'),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [mongoose.Schema.Types.ObjectId]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getOneById", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
