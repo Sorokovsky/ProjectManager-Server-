@@ -14,7 +14,7 @@ export class User {
   email: string;
   @Prop({unique: false, isRequired: false})
   avatar: string;
-  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, strictPopulate:false, ref:'Link'}]})
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref:'Link'}]})
   links: Link[];
   _id: import("mongoose").Schema.Types.ObjectId;
 }
