@@ -10,9 +10,9 @@ export class UsersService {
     async getAll():Promise<User[]>{
         return await this.userModel.find();
     }
-    async getOne(id:mongoose.Schema.Types.ObjectId):Promise<User> {
+    async getOne(email:string):Promise<User> {
         try {
-            const user:User = await this.userModel.findById(id);
+            const user:User = await this.userModel.findOne({email:email});
             if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
             return user;
         }

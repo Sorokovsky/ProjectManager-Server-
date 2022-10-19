@@ -11,9 +11,9 @@ export class UsersController{
     getAll():Promise<User[]>{
         return this.usersService.getAll();
     }
-    @Get('/:id')
-    getOne(@Param("id") id:mongoose.Schema.Types.ObjectId):Promise<User>{
-        return this.usersService.getOne(id);
+    @Get('/:email')
+    getOne(@Param("email") email:string):Promise<User>{
+        return this.usersService.getOne(email);
     }
     @Post()
     create(@Body() createUserDto:CreateUserDto):Promise<User>{

@@ -24,9 +24,9 @@ let UsersService = class UsersService {
     async getAll() {
         return await this.userModel.find();
     }
-    async getOne(id) {
+    async getOne(email) {
         try {
-            const user = await this.userModel.findById(id);
+            const user = await this.userModel.findOne({ email: email });
             if (!user)
                 throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
             return user;
