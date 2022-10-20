@@ -18,6 +18,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("../schemas/user.schema");
 const link_schema_1 = require("../schemas/link.schema");
+const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     constructor(userModel, linkModel) {
         this.userModel = userModel;
@@ -49,7 +50,8 @@ let UsersService = class UsersService {
             throw new common_1.HttpException("Email have to be a unique", common_1.HttpStatus.BAD_REQUEST);
         }
         try {
-            return await this.userModel.create(createUserDto);
+            const hashedPassword = bcrypt.hashSync(createUserDto.password, 7);
+            return await this.userModel.create(Object.assign(Object.assign({}, createUserDto), { password: hashedPassword }));
         }
         catch (e) {
             throw new common_1.HttpException("Data Base error", common_1.HttpStatus.UNAUTHORIZED);

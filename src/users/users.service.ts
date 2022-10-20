@@ -5,6 +5,7 @@ import { User, UserDocument } from "src/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Link } from "../schemas/link.schema";
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, @InjectModel(Link.name) private linkModel: Model<UserDocument>){}
@@ -32,7 +33,8 @@ export class UsersService {
             throw new HttpException("Email have to be a unique", HttpStatus.BAD_REQUEST);
         }
         try {
-            return await this.userModel.create(createUserDto);
+            const hashedPassword:string = bcrypt.hashSync(createUserDto.password, 7)
+            return await this.userModel.create({...createUserDto, password: hashedPassword});
         }catch (e) {
             throw new HttpException("Data Base error", HttpStatus.UNAUTHORIZED);
         }
