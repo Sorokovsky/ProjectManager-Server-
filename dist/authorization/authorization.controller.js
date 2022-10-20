@@ -25,7 +25,10 @@ let AuthorizationController = class AuthorizationController {
         return this.authorizationService.login(loginUserDto);
     }
     check(headers) {
-        const token = headers.authorization.split(' ')[1];
+        var _a;
+        const token = (_a = headers === null || headers === void 0 ? void 0 : headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return false;
         return this.authorizationService.checkToken(token);
     }
     registration(createUserDto) {

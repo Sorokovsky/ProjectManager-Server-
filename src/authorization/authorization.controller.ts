@@ -11,7 +11,8 @@ export class AuthorizationController{
   }
   @Get('/check')
   check(@Headers() headers){
-    const token:string = headers.authorization.split(' ')[1];
+    const token:string = headers?.authorization?.split(' ')[1];
+    if (!token) return false;
     return this.authorizationService.checkToken(token);
   }
   @Post('/registration')
