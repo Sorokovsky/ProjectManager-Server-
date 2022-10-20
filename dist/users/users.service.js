@@ -67,7 +67,8 @@ let UsersService = class UsersService {
     }
     async update(id, updateUserDto) {
         try {
-            return await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+            const hashedPassword = bcrypt.hashSync(updateUserDto.password, 7);
+            return await this.userModel.findByIdAndUpdate(id, Object.assign(Object.assign({}, updateUserDto), { password: hashedPassword }), { new: true });
         }
         catch (e) {
             throw new common_1.HttpException("Email have to be a unique", common_1.HttpStatus.BAD_REQUEST);

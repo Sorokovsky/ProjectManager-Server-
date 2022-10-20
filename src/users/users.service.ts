@@ -48,7 +48,8 @@ export class UsersService {
     }
     async update(id:mongoose.Schema.Types.ObjectId, updateUserDto:UpdateUserDto):Promise<User>{
         try{
-            return await this.userModel.findByIdAndUpdate(id, updateUserDto, {new:true});
+            const hashedPassword:string = bcrypt.hashSync(updateUserDto.password, 7);
+            return await this.userModel.findByIdAndUpdate(id, {...updateUserDto, password:hashedPassword}, {new:true});
         }catch (e) {
             throw new HttpException("Email have to be a unique", HttpStatus.BAD_REQUEST);
         }
