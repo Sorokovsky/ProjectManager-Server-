@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 function generateToken(payload) {
-    return jwt.sign(Object.assign({}, payload), process.env.SECRET_KEY, { expiresIn: '24h' });
+    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '24h' });
 }
 exports.generateToken = generateToken;
 //# sourceMappingURL=generateToken.js.map

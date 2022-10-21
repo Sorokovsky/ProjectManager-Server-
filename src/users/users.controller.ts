@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Headers, Put } from "@nestjs/common";
 import * as mongoose from "mongoose";
 import { UsersService } from "./users.service";
 import {User} from "../schemas/user.schema";
@@ -11,17 +11,13 @@ export class UsersController{
     getAll():Promise<User[]>{
         return this.usersService.getAll();
     }
-    @Get('/email/:email')
-    getOne(@Param("email") email:string):Promise<User>{
-        return this.usersService.getOne(email);
+    @Get('/token')
+    getOneByToken(@Headers() headers){
+        return this.usersService.getOneByToken(headers.authorization.split(" ")[1]);
     }
-    @Get('/id/:id')
-    getOneById(@Param("id") id:mongoose.Schema.Types.ObjectId):Promise<User>{
-        return this.usersService.getOneById(id);
-    }
-    @Post()
-    create(@Body() createUserDto:CreateUserDto):Promise<User>{
-        return this.usersService.create(createUserDto);
+    @Get('/:id')
+    getOne(@Param("id") id:mongoose.Schema.Types.ObjectId):Promise<User> {
+        return this.usersService.getOne(id);
     }
     @Delete('/:id')
     delete(@Param('id') id:mongoose.Schema.Types.ObjectId):Promise<User>{

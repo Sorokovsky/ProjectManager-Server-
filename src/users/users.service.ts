@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { User, UserDocument } from "src/schemas/user.schema";
-import { CreateUserDto } from "./dto/create-user.dto";
+import * as jwt from 'jsonwebtoken';
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Link } from "../schemas/link.schema";
 import * as bcrypt from 'bcrypt';
@@ -12,32 +12,23 @@ export class UsersService {
     async getAll():Promise<User[]>{
         return await this.userModel.find();
     }
-    async getOne(email:string):Promise<User> {
+    async getOneByToken(token:string):Promise<User>{
+        if (!token) throw new HttpException('No Token', HttpStatus.BAD_REQUEST);
         try {
-            const user:User = await this.userModel.findOne({email:email}).populate('links');
-            if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
+            const payload:any = jwt.verify(token, process.env.SECRET_KEY);
+            console.log(payload);
+            if (!payload) throw new HttpException('Token was die', HttpStatus.BAD_REQUEST);
+            const user:User|null = await this.userModel.findById(payload.id);
+            if (!user) throw new HttpException('User undefined', HttpStatus.BAD_REQUEST);
             return user;
-        }
-        catch (e) {
-            throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
+        }catch (e){
+            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
         }
     }
-    async getOneById(id:mongoose.Schema.Types.ObjectId):Promise<User> {
+    async getOne(id:mongoose.Schema.Types.ObjectId):Promise<User> {
         const user:User|null = await this.userModel.findById(id).populate('links');
         if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
         return user;
-    }
-    async create(createUserDto:CreateUserDto):Promise<User>{
-        const candidate:User|null = await this.userModel.findOne({email:createUserDto.email});
-        if (candidate){
-            throw new HttpException("Email have to be a unique", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            const hashedPassword:string = bcrypt.hashSync(createUserDto.password, 7)
-            return await this.userModel.create({...createUserDto, password: hashedPassword});
-        }catch (e) {
-            throw new HttpException("Data Base error", HttpStatus.UNAUTHORIZED);
-        }
     }
     async delete(id:mongoose.Schema.Types.ObjectId):Promise<User>{
         try {

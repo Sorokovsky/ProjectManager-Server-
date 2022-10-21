@@ -16,11 +16,14 @@ exports.AuthorizationService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const user_schema_1 = require("../schemas/user.schema");
-const mongoose_2 = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const generateToken_1 = require("../helpers/generateToken");
-const create_user_dto_1 = require("../users/dto/create-user.dto");
+const mongoose_2 = require("mongoose");
+const path = require("path");
+const fs = require("fs/promises");
+const fs_1 = require("fs");
+const uuid = require("uuid");
 let AuthorizationService = class AuthorizationService {
     constructor(userModel) {
         this.userModel = userModel;
@@ -47,13 +50,25 @@ let AuthorizationService = class AuthorizationService {
             return false;
         }
     }
-    async registration(createUserDto) {
+    async registration(createUserDto, file) {
         const cand = await this.userModel.findOne({ email: createUserDto.email });
         if (cand)
             throw new common_1.HttpException('Email have to be a unique', common_1.HttpStatus.BAD_REQUEST);
         const hashedPassword = bcrypt.hashSync(createUserDto.password, 7);
+        const { mimetype, buffer, originalname } = file;
+        const imageRegExp = new RegExp('image', 'i');
+        const isImage = imageRegExp.test(mimetype);
+        if (!isImage)
+            throw new common_1.HttpException(`Avatar have to be a image`, common_1.HttpStatus.BAD_REQUEST);
+        const extName = originalname.split('.')[1];
+        const filePath = path.resolve(__dirname, '..', 'static');
+        const fileName = uuid.v4() + '.' + extName;
+        if (!(0, fs_1.existsSync)(filePath)) {
+            await fs.mkdir(filePath, { recursive: true });
+        }
+        await fs.writeFile(path.resolve(filePath, fileName), buffer);
         try {
-            const user = await this.userModel.create(Object.assign(Object.assign({}, createUserDto), { password: hashedPassword }));
+            const user = await this.userModel.create(Object.assign(Object.assign({}, createUserDto), { password: hashedPassword, avatar: fileName }));
             const token = (0, generateToken_1.generateToken)({ id: user._id });
             return token;
         }
@@ -62,12 +77,6 @@ let AuthorizationService = class AuthorizationService {
         }
     }
 };
-__decorate([
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", Promise)
-], AuthorizationService.prototype, "registration", null);
 AuthorizationService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),

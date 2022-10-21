@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const login_user_dto_1 = require("./dto/login-user.dto");
 const authorization_service_1 = require("./authorization.service");
 const create_user_dto_1 = require("../users/dto/create-user.dto");
+const platform_express_1 = require("@nestjs/platform-express");
 let AuthorizationController = class AuthorizationController {
     constructor(authorizationService) {
         this.authorizationService = authorizationService;
@@ -31,8 +32,9 @@ let AuthorizationController = class AuthorizationController {
             return false;
         return this.authorizationService.checkToken(token);
     }
-    registration(createUserDto) {
-        return this.authorizationService.registration(createUserDto);
+    registration(createUserDto, file) {
+        console.log(file);
+        return this.authorizationService.registration(createUserDto, file);
     }
 };
 __decorate([
@@ -51,9 +53,11 @@ __decorate([
 ], AuthorizationController.prototype, "check", null);
 __decorate([
     (0, common_1.Post)('/registration'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar')),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthorizationController.prototype, "registration", null);
 AuthorizationController = __decorate([

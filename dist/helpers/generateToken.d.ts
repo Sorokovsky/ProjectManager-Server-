@@ -1,1 +1,1 @@
-export declare function generateToken(payload: any): string;
+export declare function generateToken<T extends object>(payload: T): string;

@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("../schemas/user.schema");
+const jwt = require("jsonwebtoken");
 const link_schema_1 = require("../schemas/link.schema");
 const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
@@ -27,35 +28,28 @@ let UsersService = class UsersService {
     async getAll() {
         return await this.userModel.find();
     }
-    async getOne(email) {
+    async getOneByToken(token) {
+        if (!token)
+            throw new common_1.HttpException('No Token', common_1.HttpStatus.BAD_REQUEST);
         try {
-            const user = await this.userModel.findOne({ email: email }).populate('links');
+            const payload = jwt.verify(token, process.env.SECRET_KEY);
+            console.log(payload);
+            if (!payload)
+                throw new common_1.HttpException('Token was die', common_1.HttpStatus.BAD_REQUEST);
+            const user = await this.userModel.findById(payload.id);
             if (!user)
-                throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
+                throw new common_1.HttpException('User undefined', common_1.HttpStatus.BAD_REQUEST);
             return user;
         }
         catch (e) {
-            throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException(e.message, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async getOneById(id) {
+    async getOne(id) {
         const user = await this.userModel.findById(id).populate('links');
         if (!user)
             throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
         return user;
-    }
-    async create(createUserDto) {
-        const candidate = await this.userModel.findOne({ email: createUserDto.email });
-        if (candidate) {
-            throw new common_1.HttpException("Email have to be a unique", common_1.HttpStatus.BAD_REQUEST);
-        }
-        try {
-            const hashedPassword = bcrypt.hashSync(createUserDto.password, 7);
-            return await this.userModel.create(Object.assign(Object.assign({}, createUserDto), { password: hashedPassword }));
-        }
-        catch (e) {
-            throw new common_1.HttpException("Data Base error", common_1.HttpStatus.UNAUTHORIZED);
-        }
     }
     async delete(id) {
         try {

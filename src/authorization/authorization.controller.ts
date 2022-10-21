@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Headers, Body } from "@nestjs/common";
+import { Controller, Get, Post, Headers, Body, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { AuthorizationService } from "./authorization.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 @Controller('auth')
 export class AuthorizationController{
   constructor(private authorizationService:AuthorizationService) {}
@@ -16,7 +17,9 @@ export class AuthorizationController{
     return this.authorizationService.checkToken(token);
   }
   @Post('/registration')
-  registration(@Body() createUserDto:CreateUserDto):Promise<string>{
-    return this.authorizationService.registration(createUserDto);
+  @UseInterceptors(FileInterceptor('avatar'))
+  registration(@Body() createUserDto:CreateUserDto, @UploadedFile() file:Express.Multer.File):Promise<string>{
+    console.log(file);
+    return this.authorizationService.registration(createUserDto, file);
   }
 }

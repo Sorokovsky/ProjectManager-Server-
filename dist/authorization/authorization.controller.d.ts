@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 import { LoginUserDto } from "./dto/login-user.dto";
 import { AuthorizationService } from "./authorization.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
@@ -8,5 +9,5 @@ export declare class AuthorizationController {
         token: string;
     }>;
     check(headers: any): boolean;
-    registration(createUserDto: CreateUserDto): Promise<string>;
+    registration(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<string>;
 }

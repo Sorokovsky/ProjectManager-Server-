@@ -13,12 +13,15 @@ const users_module_1 = require("./users/users.module");
 const links_module_1 = require("./links/links.module");
 const dotenv_1 = require("dotenv");
 const authorization_module_1 = require("./authorization/authorization.module");
+const serve_static_1 = require("@nestjs/serve-static");
+const path = require("path");
 (0, dotenv_1.config)();
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [users_module_1.UsersModule,
+            serve_static_1.ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
             links_module_1.LinksModule,
             authorization_module_1.AuthorizationModule,
             mongoose_1.MongooseModule.forRoot(process.env.DATA_BASE_LINK)]

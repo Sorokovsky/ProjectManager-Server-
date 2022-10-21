@@ -16,7 +16,6 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose = require("mongoose");
 const users_service_1 = require("./users.service");
-const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
@@ -25,14 +24,11 @@ let UsersController = class UsersController {
     getAll() {
         return this.usersService.getAll();
     }
-    getOne(email) {
-        return this.usersService.getOne(email);
+    getOneByToken(headers) {
+        return this.usersService.getOneByToken(headers.authorization.split(" ")[1]);
     }
-    getOneById(id) {
-        return this.usersService.getOneById(id);
-    }
-    create(createUserDto) {
-        return this.usersService.create(createUserDto);
+    getOne(id) {
+        return this.usersService.getOne(id);
     }
     delete(id) {
         return this.usersService.delete(id);
@@ -48,26 +44,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAll", null);
 __decorate([
-    (0, common_1.Get)('/email/:email'),
-    __param(0, (0, common_1.Param)("email")),
+    (0, common_1.Get)('/token'),
+    __param(0, (0, common_1.Headers)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "getOne", null);
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "getOneByToken", null);
 __decorate([
-    (0, common_1.Get)('/id/:id'),
+    (0, common_1.Get)('/:id'),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [mongoose.Schema.Types.ObjectId]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getOneById", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "create", null);
+], UsersController.prototype, "getOne", null);
 __decorate([
     (0, common_1.Delete)('/:id'),
     __param(0, (0, common_1.Param)('id')),
