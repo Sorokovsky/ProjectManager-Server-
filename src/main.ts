@@ -6,6 +6,7 @@ async function start():Promise<void>{
     config()
     const PORT:number = +process.env.PORT || 5001;
     const app:INestApplication = await NestFactory.create(AppModule);
-    await app.listen(PORT, () => console.log(`Server has been starten on port: ${PORT}`));
+    app.enableCors();
+    await app.listen(PORT, () => console.log(`Server has been started on port: ${PORT}`));
 }
 start();
