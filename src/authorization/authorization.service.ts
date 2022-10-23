@@ -26,10 +26,10 @@ export class AuthorizationService{
       throw new HttpException("Password wrong", HttpStatus.BAD_REQUEST);
     }
   }
-  checkToken(token:string):boolean{
+  checkToken(token:string){
     try {
-      jwt.verify(token, process.env.SECRET_KEY);
-      return true;
+      const data = jwt.verify(token, process.env.SECRET_KEY);
+      return data;
     }catch (e){
       return false;
     }

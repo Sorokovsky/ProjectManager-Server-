@@ -43,8 +43,8 @@ let AuthorizationService = class AuthorizationService {
     }
     checkToken(token) {
         try {
-            jwt.verify(token, process.env.SECRET_KEY);
-            return true;
+            const data = jwt.verify(token, process.env.SECRET_KEY);
+            return data;
         }
         catch (e) {
             return false;
