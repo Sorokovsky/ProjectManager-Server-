@@ -26,9 +26,11 @@ export class UsersService {
         }
     }
     async getOne(id:mongoose.Schema.Types.ObjectId):Promise<User> {
-        const user:User|null = await this.userModel.findById(id).populate('links');
-        if(!user) throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
-        return user;
+        try{
+            return await this.userModel.findById(id).populate('links');
+        }catch(e){
+            throw new HttpException("User undefined", HttpStatus.BAD_REQUEST);
+        }
     }
     async delete(id:mongoose.Schema.Types.ObjectId):Promise<User>{
         try {

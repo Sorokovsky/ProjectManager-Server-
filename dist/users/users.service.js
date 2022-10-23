@@ -46,10 +46,12 @@ let UsersService = class UsersService {
         }
     }
     async getOne(id) {
-        const user = await this.userModel.findById(id).populate('links');
-        if (!user)
+        try {
+            return await this.userModel.findById(id).populate('links');
+        }
+        catch (e) {
             throw new common_1.HttpException("User undefined", common_1.HttpStatus.BAD_REQUEST);
-        return user;
+        }
     }
     async delete(id) {
         try {
