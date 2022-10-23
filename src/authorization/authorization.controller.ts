@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Headers, Body, UseInterceptors, UploadedFile } from "@nestjs/common";
+import { Controller, Get, Post, Headers, Body, UseInterceptors, UploadedFile, HttpStatus, HttpException } from "@nestjs/common";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { AuthorizationService } from "./authorization.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
@@ -13,7 +13,7 @@ export class AuthorizationController{
   @Get('/check')
   check(@Headers() headers){
     const token:string = headers?.authorization?.split(' ')[1];
-    if (!token) return false;
+    if (!token) throw new HttpException('Token died', HttpStatus.BAD_REQUEST);
     return this.authorizationService.checkToken(token);
   }
   @Post('/registration')

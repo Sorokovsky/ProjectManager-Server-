@@ -29,7 +29,7 @@ let AuthorizationController = class AuthorizationController {
         var _a;
         const token = (_a = headers === null || headers === void 0 ? void 0 : headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
         if (!token)
-            return false;
+            throw new common_1.HttpException('Token died', common_1.HttpStatus.BAD_REQUEST);
         return this.authorizationService.checkToken(token);
     }
     registration(createUserDto, file) {
