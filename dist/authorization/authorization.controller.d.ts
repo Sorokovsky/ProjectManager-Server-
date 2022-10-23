@@ -8,6 +8,6 @@ export declare class AuthorizationController {
     login(loginUserDto: LoginUserDto): Promise<{
         token: string;
     }>;
-    check(headers: any): string | false | import("jsonwebtoken").JwtPayload;
+    check(headers: any): string | import("jsonwebtoken").JwtPayload;
     registration(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<string>;
 }

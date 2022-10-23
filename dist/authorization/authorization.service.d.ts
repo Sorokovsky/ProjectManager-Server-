@@ -10,6 +10,6 @@ export declare class AuthorizationService {
     login(loginUserDto: LoginUserDto): Promise<{
         token: string;
     }>;
-    checkToken(token: string): string | false | jwt.JwtPayload;
+    checkToken(token: string): string | jwt.JwtPayload;
     registration(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<string>;
 }

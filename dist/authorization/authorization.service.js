@@ -47,7 +47,7 @@ let AuthorizationService = class AuthorizationService {
             return data;
         }
         catch (e) {
-            return false;
+            throw new common_1.HttpException('Token died', common_1.HttpStatus.BAD_REQUEST);
         }
     }
     async registration(createUserDto, file) {

@@ -31,7 +31,7 @@ export class AuthorizationService{
       const data = jwt.verify(token, process.env.SECRET_KEY);
       return data;
     }catch (e){
-      return false;
+      throw new HttpException('Token died', HttpStatus.BAD_REQUEST);
     }
   }
   async registration(createUserDto:CreateUserDto, file:Express.Multer.File):Promise<string> {
